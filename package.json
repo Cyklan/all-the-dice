@@ -1,23 +1,30 @@
 {
   "name": "all-the-dice",
-  "version": "1.1.0",
+  "version": "1.1.1",
   "description": "Zero dependency dice rolling library",
   "scripts": {
     "test": "jest",
     "start": "tsc && node dist",
-    "prepublish": "tsc"
+    "prepublish": "tsc -p tsconfig.build.json"
   },
   "author": "Cyklan",
   "license": "MIT",
   "devDependencies": {
+    "@types/jest": "^27.4.0",
     "babel-jest": "^27.5.1",
     "jest": "^27.5.1",
+    "ts-jest": "^27.1.3",
     "typescript": "^4.5.5"
   },
   "jest": {
+    "preset": "ts-jest",
+    "testEnvironment": "node",
     "transform": {
-      "^.+\\.[t|j]sx?$": "babel-jest"
-    }
+      "^.+\\.[t|j]sx?$": "ts-jest"
+    },
+    "modulePathIgnorePatterns": [
+      "<rootDir>/dist"
+    ]
   },
   "types": "dist/index.d.ts",
   "main": "dist/index.js"

@@ -32,7 +32,11 @@ export class DiceQuery {
     const diceValues = dice.map((d) => this.parseDiceToValue(d));
     this.dice = diceValues;
 
-    if (operations !== null) {
+    if (operations === null) {
+      if (query.replace(/\d/g, "").match(/[\W_]/g)) {
+        throw new Error("Invalid dice query");
+      }
+    } else {
       const operationValues = operations.map((o) => getQueryOperator(o));
       this.operations = operationValues;
     }
@@ -70,7 +74,6 @@ export class DiceQuery {
   private calculate() {
     let evaluation = "";
     for (let i = 0; i < this.dice.length; i++) {
-      
       if (this.dice[i].isDice) {
         evaluation += Math.floor(Math.random() * this.dice[i].value) + 1;
       } else {
@@ -81,8 +84,6 @@ export class DiceQuery {
         evaluation += this.operations[i];
       }
     }
-
-    console.log(evaluation);
 
     this.result = eval(evaluation) as number;
   }
