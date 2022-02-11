@@ -2,7 +2,7 @@ export enum QueryOperator {
   Add = "+",
   Subtract = "-",
   Multiply = "*",
-  Divide = ":",
+  Divide = "/",
 }
 
 export function getQueryOperator(operator: string) {
@@ -13,7 +13,7 @@ export function getQueryOperator(operator: string) {
       return QueryOperator.Subtract;
     case "*":
       return QueryOperator.Multiply;
-    case ":":
+    case "/":
       return QueryOperator.Divide;
     default:
       throw new Error(`Unknown operator: ${operator}`);

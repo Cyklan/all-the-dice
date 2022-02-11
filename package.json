@@ -1,10 +1,11 @@
 {
   "name": "all-the-dice",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "Zero dependency dice rolling library",
   "scripts": {
     "test": "jest",
-    "start": "tsc && node dist"
+    "start": "tsc && node dist",
+    "prepublish": "tsc"
   },
   "author": "Cyklan",
   "license": "MIT",
@@ -17,5 +18,7 @@
     "transform": {
       "^.+\\.[t|j]sx?$": "babel-jest"
     }
-  }
+  },
+  "types": "dist/index.d.ts",
+  "main": "dist/index.js"
 }

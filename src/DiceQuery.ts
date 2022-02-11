@@ -1,7 +1,8 @@
+import { Dice } from "./Dice";
 import { getQueryOperator, QueryOperator } from "./QueryOperator";
 
 export class DiceQuery {
-  private dice: number[];
+  private dice: Dice[];
   private operations: QueryOperator[];
 
   public result: number;
@@ -13,13 +14,16 @@ export class DiceQuery {
     if (diceQuery.length === 0) {
       throw new Error("Dice query cannot be empty");
     }
+
+    this.parseQuery(diceQuery);
+    this.calculate();
   }
 
   private parseQuery(query: string) {
     query = query.replace(/\s/g, "");
 
     const dice = query.match(/\d*d?\d+/g);
-    const operations = query.match(/[[+\-*/]]/g);
+    const operations = query.match(/([\*\-\/\+])/g);
 
     if (dice === null) {
       throw new Error("Invalid dice query");
@@ -27,30 +31,63 @@ export class DiceQuery {
 
     const diceValues = dice.map((d) => this.parseDiceToValue(d));
     this.dice = diceValues;
-    
+
     if (operations !== null) {
       const operationValues = operations.map((o) => getQueryOperator(o));
       this.operations = operationValues;
     }
   }
 
-  private parseDiceToValue(dice: string): number {
+  private parseDiceToValue(dice: string): Dice {
     const parts = dice.split("d");
     const count = parseInt(parts[0], 10);
     const sides = parseInt(parts[1], 10);
 
-    if (isNaN(count) || isNaN(sides)) {
+    if (isNaN(count) && isNaN(sides)) {
       throw new Error("Invalid dice format");
     }
 
-    return count * sides;
+    if (isNaN(sides) && !isNaN(count)) {
+      return {
+        value: count,
+        isDice: false,
+      };
+    }
+
+    if (isNaN(count) && !isNaN(sides)) {
+      return {
+        value: sides,
+        isDice: true,
+      };
+    }
+
+    return {
+      isDice: true,
+      value: count * sides,
+    };
   }
 
-  private calculate(): number {
-    return 0;
+  private calculate() {
+    let evaluation = "";
+    for (let i = 0; i < this.dice.length; i++) {
+      
+      if (this.dice[i].isDice) {
+        evaluation += Math.floor(Math.random() * this.dice[i].value) + 1;
+      } else {
+        evaluation += this.dice[i].value;
+      }
+
+      if (this.operations[i]) {
+        evaluation += this.operations[i];
+      }
+    }
+
+    console.log(evaluation);
+
+    this.result = eval(evaluation) as number;
   }
 
   public toString() {
-    return this.calculate().toString();
+    return this.result.toString();
   }
 }
