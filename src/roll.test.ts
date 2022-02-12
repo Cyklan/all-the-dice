@@ -24,5 +24,15 @@ test("never get a result higher than the specified dice", () => {
 test("throw error on wrong math operator", () => {
   expect(() => roll("1d20+")).toThrow();
   expect(() => roll("")).toThrow();
-  expect(() => roll("1d20 . 5")).toThrow()
-}) 
+  expect(() => roll("1d20 . 5")).toThrow();
+});
+
+test("never get a result lower than the amount of dice rolled", () => {
+  const results = [];
+  for (let i = 0; i < 1000; i++) {
+    const result = roll("5d6");
+    results.push(result);
+  }
+
+  expect(results.filter((x) => x < 5).length).toBe(0);
+});

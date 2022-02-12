@@ -53,21 +53,24 @@ export class DiceQuery {
 
     if (isNaN(sides) && !isNaN(count)) {
       return {
-        value: count,
+        sides: count,
+        count: 1,
         isDice: false,
       };
     }
 
     if (isNaN(count) && !isNaN(sides)) {
       return {
-        value: sides,
+        sides,
+        count: 1,
         isDice: true,
       };
     }
 
     return {
       isDice: true,
-      value: count * sides,
+      sides,
+      count,
     };
   }
 
@@ -75,9 +78,9 @@ export class DiceQuery {
     let evaluation = "";
     for (let i = 0; i < this.dice.length; i++) {
       if (this.dice[i].isDice) {
-        evaluation += Math.floor(Math.random() * this.dice[i].value) + 1;
+        evaluation += Math.max(Math.ceil(Math.random() * (this.dice[i].sides * this.dice[i].count)), this.dice[i].count);
       } else {
-        evaluation += this.dice[i].value;
+        evaluation += this.dice[i].sides;
       }
 
       if (this.operations[i]) {

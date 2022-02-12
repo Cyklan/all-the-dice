@@ -1,4 +1,5 @@
 export type Dice = {
-  value: number;
+  sides: number;
+  count: number;
   isDice: boolean;
 }
